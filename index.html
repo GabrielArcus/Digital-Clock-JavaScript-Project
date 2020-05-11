@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,700&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Quantico:wght@400;700&display=swap" rel="stylesheet">
+	<script src="https://kit.fontawesome.com/74e6120b0a.js" crossorigin="anonymous"></script>
+	<style>
+		/* CSS Here */
+		@font-face {
+			  font-family:"digital-7";
+			  src: url("digital-7.ttf") format("truetype");
+		}
+		body{
+			background-color: lightgrey;
+		}
+		.container{
+			width: 100%;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+		}
+		.time-output{
+			font-size: 100px;
+			color: white;
+			opacity: 0.6;
+			text-shadow: 0px 0px 8px;
+		}
+		.clock{
+			width: 700px;
+			background-color: #000;
+			position: relative;
+			border-radius: 10px;
+			text-align: center;
+			font-family: 'digital-7', sans-serif;
+			margin-top: 100px;
+			opacity: 0;
+		}
+		.clock-button{
+			margin-top: 20px;
+		}
+		.am-marker,
+		.pm-marker,
+		.minute-marker,
+		.second-marker {
+			display: none;
+		}
+		.second-marker,
+		.minute-marker {
+			display: inline-block;
+			margin-right: -23px;
+		}
+		.am-marker,
+		.pm-marker {
+			position: absolute;
+			top: 190px;
+			right: 75px;
+			font-size: 25px;
+		}
+		.alarm-icon{
+			position: absolute;
+			top: 160px;
+			right: 75px;
+			font-size: 25px;
+		}
+		.button-text{
+			color: white;
+			opacity: 0.6;
+			text-shadow: 1px 1px 6px;
+		}
+		.date-text{
+			position: absolute;
+			top: 70px;
+			right: 450px;
+			font-size: 30px;
+		}
+		button {
+			background-color: #000;
+			color: white;
+			text-transform: uppercase;
+			width: 700px;
+			font-family: 'digital-7', sans-serif;
+			font-size: 30px;
+			font-weight: bold;
+			border-radius: 10px;
+			border: none;
+		}
+		button:hover .button-text{
+			color: white;
+			opacity: 1;
+			outline: 0;
+		}
+
+	</style>
+</head>
+<body>
+
+	<div class="container">
+		<div class="clock">
+			<h4 class="time-output" id="output">
+				<span id="hours"></span>
+				<span>:</span>
+				<!-- 0 that will hide or show when conditional matches -->
+				<span id="minuteMarker" class="minute-marker">0</span>
+				<span id="minutes"></span>
+				<span>:</span>
+				<!-- 0 that will hide or show when conditional matches -->
+				<span id="secondMarker" class="second-marker">0</span>
+				<span id="seconds"></span>
+				<!-- am/pm that will hide or show when conditional matches -->
+				<span id="amMarker" class="am-marker">AM</span>
+				<span id="pmMarker" class="pm-marker">PM</span>
+				<i class="fas fa-bell alarm-icon"></i>
+				<p class="date-text">Monday</p>
+			</h4>
+		</div>
+
+		<div class="clock-button">
+			<button type="button" class="btn"><p class="button-text">Click to set alarm and view digital clock</p></button>
+		</div>
+	</div>
+
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+
+	<script>
+
+	// Digital clock JS STARTS
+	$(document).ready(function(){
+
+		// Alarm button
+		// This click is because Google chrome will not play sounds until a user has interacted
+		// or clicked on the screen, privacy and intrusion rules.
+
+		// jQuery click function that will make the clock div change from opacity of 0 to 1
+		// after the button has been clicked
+		// $(selector).event(function(){
+		// 	$(selector).action(controls)
+		// });
+		$('button').click(function(){
+			$('.clock').fadeTo('slow', 1);
+		});
+
+
+		// Create variables to identify elements forom the html
+		// identify elements using getElementById method
+		// var name = selector.action('id')
+		var getHoursHtml = document.getElementById('hours');
+		var getMinutesHtml = document.getElementById('minutes');
+		var getSecondsHtml = document.getElementById('seconds');
+
+
+			// Create a variable to access the date and time information from the browser
+			var timeStamp = new Date();
+
+			// Create individual variables to access the hours, minutes and seconds,
+			// from the date and time information in the timeStamp variable
+			var hours = timeStamp.getHours();
+			var minutes = timeStamp.getMinutes();
+			var seconds = timeStamp.getSeconds();
+
+			// Update the html with the hours, minutes and seconds information from the timeStamp variable.
+			// make the "document.getElementById" variables equal to the corresponding "timeStamp.getTime" variables.
+			// use textcontent to update the text information displayed inside element
+			getHoursHtml.textContent = hours;
+			getMinutesHtml.textContent = minutes;
+			getSecondsHtml.textContent = seconds;
+
+			// Create if or else conditional,to show the element with an id #minuteMarker
+			// if the minutes diplayed are less than 10 show the #minuteMarker element,
+			// when the minutes displayed are greater than 10 hide the #minuteMarker element
+			// the #minuteMarker span will show a "0"
+			if (minutes < 10) {
+				// jQuery action, selcting the element with an id of #minuteMarker and giving it a show action.
+				$('#minuteMarker').show();
+			} else {
+				$('#minuteMarker').hide();
+			};
+			// if or else conditional, showing and hiding the element with an #secondMarker id
+			// same conditions as above
+			if (seconds < 10) {
+				$('#secondMarker').show();
+			} else {
+				$('#secondMarker').hide();
+			};
+			// if or else conditional, showing the #amMarker and hiding the #pmMarker element when the hours displayed are less than 12
+			// when the hours are greater than 12 the #pmMarker will be shown and the #amMarker will be hidden
+			if (hours < 12) {
+				$('#amMarker').show();
+				$('#pmMarker').hide();
+			} else {
+				$('#pmMarker').show();
+				$('#amMarker').hide();
+			};
+
+			// Use the setInterval function to check and update
+			// the hours, minutes and seconds, on a one second loop
+			setInterval(function () {
+				// All the stuff that needs to be checked and updated every second
+				// goes in here
+
+				// This updates the elements inside this function every second,
+				// which means the time continually updates each second
+				// the page doesnt have to be reloaded
+
+				// Variable to acess the time and date information stored in the browser
+				var timeStamp = new Date();
+				// Variables that select and identify the hours, minutes and seconds data
+				// from the timeStamp variable
+				var hours = timeStamp.getHours();
+				var minutes = timeStamp.getMinutes();
+				var seconds = timeStamp.getSeconds();
+				// Variables that update the text in the HTML
+				// with the time data for the hours, minutes and seconds found in the timeStamp variable
+				getHoursHtml.textContent = hours;
+				getMinutesHtml.textContent = minutes;
+				getSecondsHtml.textContent = seconds;
+
+				// if or else conditional, checking if the minutes are less than 10
+				// showing the "0" span, is the minutes are less than 10, or hiding the
+				// "0" span if greater than 10
+				if (minutes < 10) {
+					$('#minuteMarker').show();
+				} else {
+					$('#minuteMarker').hide();
+				};
+				// if or else conditional, checking if the seconds are less than 10
+				// showing the "0" span, is the seconds are less than 10, or hiding the
+				// "0" span if greater than 10
+				if (seconds < 10) {
+					$('#secondMarker').show();
+				} else {
+					$('#secondMarker').hide();
+				};
+				// if or else conditional, checking if the hours are less then 12
+				// showing the "am" span and hiding the "pm" span if the hours are less than 12
+				// when the hours are greater than 12, the "pm" span is shown and the "am" span is hidden
+				if (hours < 12) {
+					$('#amMarker').show();
+					$('#pmMarker').hide();
+				} else {
+					$('#pmMarker').show();
+					$('#amMarker').hide();
+				};
+
+				// Create an array that will trigger an alarm at a set time (hours, minutes, seconds)
+				var alarmSetting = [19, 21, 00];
+				// Index no:         0,  1,  2
+
+				// Create an if statement that will check when the hours, minutes and seconds match up
+				// with the set time in the alarmSetting variable.
+				// Index no's will be equal to the time data found in the the timeStamp variable
+				// this will be checked and updated every second, so when the set time in the alarmSetting variable is updated
+				// the function below will happen
+				if ((alarmSetting[0] === hours) && (alarmSetting[1] === minutes) && (alarmSetting[2] === seconds)) {
+					// Use a setTimeout function to play the alarm sound,
+					// when the set time in the alarmSetting variable has been updated on the page
+					setTimeout(function(){
+
+						// Create a variable and store an audio file inside
+						var sound = new Audio('alarm-buzzer.mp3');
+						// play action is used to start playing the audio file 'alarm-buzzer.mp3' found in the sound variable
+						sound.play()
+
+					}, 400);
+				};
+
+			}, 1000);
+			// setInterval one second loop function ENDS
+			// The number above controls the time the clock updates 1000 = milliseconds = 1 second
+
+	});
+	// Document Ready ENDS.
+
+	</script>
+</body>
+</html>
